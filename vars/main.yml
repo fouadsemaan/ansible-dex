@@ -1,6 +1,6 @@
 ---
 dex_name: dex-{{dex_ver}}
-dex_tgz: 'v{{ dex_ver }}.tar.tgz'
+dex_tgz: 'v{{ dex_ver }}.tar.gz'
 dex_tmp_tgz: /tmp/{{ dex_tgz }}
 dex_tgz_url: '{{ dex_mirror }}/{{ dex_tgz }}'
 

@@ -1,0 +1,6 @@
+---
+dex_download_timeout_seconds: 600
+dex_install_parent_dir: /usr/local
+
+dex_mirror: https://github.com/dexidp/dex/archive/refs/tags
+dex_ver: 2.30.1 

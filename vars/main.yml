@@ -1,0 +1,8 @@
+---
+dex_name: dex-{{dex_ver}}
+dex_tgz: 'v{{ dex_ver }}.tar.tgz'
+dex_tmp_tgz: /tmp/{{ dex_tgz }}
+dex_tgz_url: '{{ dex_mirror }}/{{ dex_tgz }}'
+
+dex_install_dir: '{{ dex_install_parent_dir }}/{{ dex_name }}'
+dex_install_link_dir: '{{ dex_install_parent_dir }}/dex'

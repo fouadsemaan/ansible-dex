@@ -1,0 +1,58 @@
+---
+- name: check for dex installation in {{ dex_install_dir }}
+  become: yes
+  stat:
+    path: '{{ dex_install_dir }}'
+  changed_when: false
+  register: dex_binary
+- when: not dex_binary.stat.exists
+  block:
+    - name: downloading {{ dex_tgz_url }}
+      become: yes
+      become_user: root
+      get_url:
+        url: '{{ dex_tgz_url }}'
+        dest: /tmp/{{ dex_tgz }}
+        mode: '0644'
+        timeout: '{{ dex_download_timeout_seconds }}'
+    - name: mkdir {{ dex_install_parent_dir }}
+      become: yes
+      become_user: root
+      file:
+        path: '{{ dex_install_parent_dir }}'
+        state: directory
+        mode: '0755'
+    - name: unarchive {{ dex_tmp_tgz }}
+      become: yes
+      become_user: root
+      unarchive:
+        remote_src: yes
+        src: '{{ dex_tmp_tgz }}'
+        dest: '{{ dex_install_parent_dir }}'
+        creates: '{{ dex_install_dir }}'
+  always:
+    - name: rm {{ dex_tmp_tgz }}
+      become: yes
+      become_user: root
+      file:
+        path: '{{ dex_tmp_tgz }}'
+        state: absent
+
+- name: linking {{ dex_install_link_dir }} to {{ dex_install_dir }}
+  become: yes
+  become_user: root
+  file:
+    src: '{{ dex_install_dir }}'
+    dest: '{{ dex_install_link_dir }}'
+    state: link
+
+- name: include dex in the default path
+  become: yes
+  become_user: root
+  with_items:
+    - d: /etc/profile.d
+      f: dex.sh
+  template:
+    src: '{{ item.f }}.j2'
+    dest: '{{ item.d }}/{{ item.f }}'
+    mode: '{{ item.m|default("0644") }}'
